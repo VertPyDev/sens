@@ -17,7 +17,6 @@ def get_data(allsensors, sensor_id=0):
         with open("sensor_list", "r") as fp:
             for line in fp.readlines():
                 _get_data(line.strip())
-        return
     else:
         _get_data(sensor_id)
 
