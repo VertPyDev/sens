@@ -1,5 +1,6 @@
 import decimal
 import click
+import time
 import requests
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
@@ -94,4 +95,6 @@ def add_to_influxdb(element):
     write_api.write(bucket=INFLUXDB_BUCKET, org=INFLUXDB_ORG, record=p)
 
 if __name__ == '__main__':
-    get_data()
+    while True:
+        get_data()
+        time.sleep(300)
