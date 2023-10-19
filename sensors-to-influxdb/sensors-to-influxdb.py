@@ -13,12 +13,14 @@ SENSOR_GEO_CACHE={}
 @click.option('--sensor_id')
 @click.option('--allsensors/--not-allsensors', default=False)
 def get_data(allsensors, sensor_id=0):
-    if allsensors:
-        with open("sensor_list", "r") as fp:
-            for line in fp.readlines():
-                _get_data(line.strip())
-    else:
-        _get_data(sensor_id)
+    while True:
+        if allsensors:
+            with open("sensor_list", "r") as fp:
+                for line in fp.readlines():
+                    _get_data(line.strip())
+        else:
+            _get_data(sensor_id)
+        time.sleep(300)
 
 
 def _get_geolocation(sensor_id, location):
@@ -94,6 +96,4 @@ def add_to_influxdb(element):
     write_api.write(bucket=INFLUXDB_BUCKET, org=INFLUXDB_ORG, record=p)
 
 if __name__ == '__main__':
-    while True:
-        get_data()
-        time.sleep(300)
+    get_data()
