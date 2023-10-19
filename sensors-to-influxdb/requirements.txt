@@ -1,0 +1,4 @@
+requests
+click
+influxdb-client
+geopy
