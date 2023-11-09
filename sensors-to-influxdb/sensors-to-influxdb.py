@@ -6,6 +6,7 @@ import influxdb_client
 import logging
 from config import Config
 from influxdb_client.client.write_api import SYNCHRONOUS
+from influxdb_client.client.exceptions import InfluxDBError
 from geopy.geocoders import Nominatim
 
 
@@ -55,7 +56,7 @@ class sensors_to_influxdb:
             geolocator = Nominatim(user_agent="sensor_api_collector")
             geo_location = geolocator.reverse((latitude, longitude), exactly_one=True)
             address = geo_location.raw['address']
-            city = address.get('village', '')
+            city = address.get('town', address.get('village', ''))
             postcode = address.get('postcode', '')
             return {
                 'longitude': longitude,
@@ -101,6 +102,7 @@ class sensors_to_influxdb:
                 self.add_to_influxdb(element)
 
     def add_to_influxdb(self, element):
+        logging.debug("Writing to infuxdb : %s", element)
         client = influxdb_client.InfluxDBClient(
             url=self.config.influxdb_url,
             token=self.config.influxdb_token,
@@ -117,7 +119,10 @@ class sensors_to_influxdb:
             .field("latitude", element['location']['latitude'])
         for key, value in element['values'].items():
             p.field(key, value)
-        write_api.write(bucket=self.config.influxdb_bucket, org=self.config.influxdb_org, record=p)
+        try:
+            write_api.write(bucket=self.config.influxdb_bucket, org=self.config.influxdb_org, record=p)
+        except InfluxDBError as e:
+            logging.exception(e)
 
 @click.command()
 @click.option('--allsensors/--not-allsensors', default=False)
