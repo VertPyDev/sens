@@ -160,5 +160,5 @@ cython_debug/
 #.idea/
 
 # Config
-sensors-to-influxdb/config.py
+sensors-to-influxdb/*.conf
 sensors-to-influxdb/sensor_list

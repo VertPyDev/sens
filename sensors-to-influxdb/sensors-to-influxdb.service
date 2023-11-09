@@ -1,8 +1,11 @@
 [Unit]
 Description=Sensors API to influxdb
-After=multi-user.target[Service]
+After=network.target
 Type=simple
 Restart=always
 ExecStart=/usr/bin/python3 /opt/sensors/sensors-to-influxdb.py
+StandardOutput=syslog
+StandardError=syslog
+
 [Install]
 WantedBy=multi-user.target
