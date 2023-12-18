@@ -9,14 +9,14 @@ from influxdb_writer import *
 
 class sensors_to_influxdb:
 
-    def __init__(self, conf: str, list: str, debug: bool = False):
-        if debug:
+    def __init__(self, conf: str, list: str):
+        self.config = Config(conf)
+        if self.config.debug:
             level = logging.DEBUG
         else:
             level = logging.INFO
         logging.basicConfig(format='%(asctime)s - %(message)s', level=level)
-
-        self.config = Config(conf)
+        logging.debug("Configuration: %s", self.config.to_string())
         self.sensors = SensorList(list)
         self.sensor_community_data_reader = SensorCommunityDataReader(self.config.api_url)
         self.influxdb_sensor_data_writer = InfluxDBSensorDataWriter(self.config.influxdb_url, self.config.influxdb_token, self.config.influxdb_org)
@@ -32,9 +32,8 @@ class sensors_to_influxdb:
 @click.command()
 @click.option('--conf', type=click.Path(exists=True, file_okay=True, dir_okay=False))
 @click.option('--list', type=click.Path(exists=True, file_okay=True, dir_okay=False))
-@click.option('--debug', default=False, type=click.BOOL)
-def command(conf, list, debug=False):
-    sensors=sensors_to_influxdb(conf, list, debug)
+def command(conf, list):
+    sensors=sensors_to_influxdb(conf, list)
     sensors.get_data()
 
 if __name__ == '__main__':

@@ -11,13 +11,13 @@ class SensorCommunityData():
 
     def __init__(self, sensor: Sensor):
         self.sensor = sensor
+        self.values = {}
 
 
 class SensorCommunityDataReader():
 
     def __init__(self, api_url: str):
         self.api_url = api_url
-
 
     def get_data(self, sensor: Sensor):
         pm_sensor_data_list = self._read_data(sensor, sensor.airrohr_pm_id)
