@@ -5,8 +5,8 @@ from geopy.geocoders import Nominatim
 class SensorLocation:
     id: int
     country: str
-    longitude: str
-    latitude: str
+    longitude: float
+    latitude: float
     address: str
     city: str
     postcode: str
