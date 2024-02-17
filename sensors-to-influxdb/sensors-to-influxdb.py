@@ -23,11 +23,14 @@ class sensors_to_influxdb:
         
     def get_data(self):
         while True:
-            for sensor in self.sensors:
-                sensor_data_list = self.sensor_community_data_reader.get_data(sensor)
-                for data in sensor_data_list:
-                    self.influxdb_sensor_data_writer.add_to_influxdb(data, self.config.influxdb_bucket)
-            time.sleep(self.config.loop_time)
+            try:
+                for sensor in self.sensors:
+                    sensor_data_list = self.sensor_community_data_reader.get_data(sensor)
+                    for data in sensor_data_list:
+                        self.influxdb_sensor_data_writer.add_to_influxdb(data, self.config.influxdb_bucket)
+                time.sleep(self.config.loop_time)
+            except:
+                logging.exception()
 
 @click.command()
 @click.option('--conf', type=click.Path(exists=True, file_okay=True, dir_okay=False))

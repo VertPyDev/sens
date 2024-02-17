@@ -20,14 +20,18 @@ class SensorCommunityDataReader():
         self.api_url = api_url
 
     def get_data(self, sensor: Sensor):
-        pm_sensor_data_list = self._read_data(sensor, sensor.airrohr_pm_id)
-        hum_sensor_data_list = self._read_data(sensor, sensor.airrohr_hum_id)
-        sensor_data_list = pm_sensor_data_list + hum_sensor_data_list
-        if sensor_data_list:
-            return sensor_data_list
-        else:
+        try:
+            pm_sensor_data_list = self._read_data(sensor, sensor.airrohr_pm_id)
+            hum_sensor_data_list = self._read_data(sensor, sensor.airrohr_hum_id)
+            sensor_data_list = pm_sensor_data_list + hum_sensor_data_list
+            if sensor_data_list:
+                return sensor_data_list
+            else:
+                return []
+        except:
+            logging.exception("Error getting data from %s", sensor.airrohr_pm_id)
             return []
-
+    
 
     def _read_data(self, sensor: Sensor, sensor_id: int):
         logging.info("Getting data from sensor %s", sensor_id)

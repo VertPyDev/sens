@@ -19,11 +19,15 @@ class SensorLocation:
         self._get_geolocation()     
 
     def _get_geolocation(self):
-            geolocator = Nominatim(user_agent="sensor_api_collector")
-            geo_location = geolocator.reverse((self.latitude, self.longitude), exactly_one=True)
-            self.address = geo_location.raw['address']
-            self.city = self.address.get('town', self.address.get('village', ''))
-            self.postcode = self.address.get('postcode', '')
+            try:
+                geolocator = Nominatim(user_agent="sensor_api_collector")
+                geo_location = geolocator.reverse((self.latitude, self.longitude), exactly_one=True)
+                self.address = geo_location.raw['address']
+                self.city = self.address.get('town', self.address.get('village', ''))
+                self.postcode = self.address.get('postcode', '')
+            except:
+                logging.exception("Error getting geolocation")
+            
 
 class Sensor:
     airrohr_pm_id: int
