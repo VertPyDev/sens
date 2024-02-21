@@ -23,8 +23,8 @@ class InfluxDBSensorDataWriter:
             .tag("city", sensor_data.sensor.location.city)\
             .tag("cp", sensor_data.sensor.location.postcode)\
             .time(sensor_data.timestamp)\
-            .field("latitude", sensor_data.sensor.location.longitude)\
-            .field("longitude", sensor_data.sensor.location.latitude)
+            .field("latitude", sensor_data.sensor.location.latitude)\
+            .field("longitude", sensor_data.sensor.location.longitude)
         for key, value in sensor_data.values.items():
             p.field(key, value)
         try:
